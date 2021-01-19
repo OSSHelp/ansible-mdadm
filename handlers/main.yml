@@ -1,0 +1,3 @@
+---
+- name: mdadm test alert
+  command: mdadm --monitor --scan --test --oneshot

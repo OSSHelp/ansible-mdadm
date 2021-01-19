@@ -1,0 +1,7 @@
+---
+email_to: 'root'
+email_from: 'mdadm'
+
+mdadm_packages:
+  - mdadm
+  - mailutils

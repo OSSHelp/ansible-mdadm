@@ -1,0 +1,23 @@
+---
+- name: package installation
+  apt:
+    name: "{{ mdadm_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: check /etc/mdadm/mdadm.conf
+  stat: path=/etc/mdadm/mdadm.conf
+  register: mdadm_config
+
+- name: email
+  lineinfile: dest=/etc/mdadm/mdadm.conf line="MAILADDR {{ email_to }}" regexp='MAILADDR'
+  when: mdadm_config.stat.exists and ansible_virtualization_type != 'lxc'
+  notify:
+    - mdadm test alert
+
+- name: mailfrom
+  lineinfile: dest=/etc/mdadm/mdadm.conf line="MAILFROM {{ email_from }}" regexp='MAILFROM' insertafter='MAILADDR'
+  when: mdadm_config.stat.exists and ansible_virtualization_type != 'lxc'
+  notify:
+    - mdadm test alert
